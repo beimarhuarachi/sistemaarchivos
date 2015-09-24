@@ -1,0 +1,80 @@
+<!DOCTYPE>
+
+<HTML>
+<HEAD>
+<TITLE>Prueba con un FORM</TITLE>
+<link rel="stylesheet" type="text/css" href="lib/semantic-ui/semantic.min.css">
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
+<script type="text/javascript" src="lib/semantic-ui/semantic.min.js"></script>
+<script type="text/javascript" src="lib/handlebars/handlebarsv4.js"></script>
+<script type="text/javascript" src="js/enviar.js"></script>
+
+<script id="entry-template" type="text/x-handlebars-template">
+  <div class="entry">
+    <h1>{{title}}</h1>
+    <div class="body">
+      {{body}}
+    </div>
+  </div>
+</script>
+
+<script id="listaDirectorios" type="text/x-handlebars-template">
+  <div class="ui list">
+{{#each Directorios}}
+  <div class="item">
+    
+    
+    {{#if Tipo}}
+      <i class="large folder icon"></i>
+    {{else}}
+      <i class="large file text outline icon"></i>
+    {{/if}}
+    <a class="content">
+      {{Nombre}}
+    </a>
+  </div>
+  {{/each}}
+</div>
+</script>
+
+
+
+</HEAD>
+<BODY>
+<H1>Ingresa los datos que corresponden para hacer la prueba;</H1>
+<BR><HR>
+<FORM class="ui form" METHOD="GET" ACTION="/cgi-bin/navegador.cgi">
+<UL>
+<LI><div class="field">Nombre: <INPUT class="ui field" TYPE="text" NAME=nombre SIZE=20></div>
+<LI>Edad: <INPUT TYPE="text" NAME=edad SIZE=2>
+<LI>Hincha de:
+<SELECT class="ui fluid dropdown" NAME="equipo">
+<OPTION SELECTED> Boca Juniors
+<OPTION> River Plate
+<OPTION> San Lorenzo
+<OPTION> Independiente
+<OPTION> Racing Club.
+<SELECT>
+<LI>Email: <INPUT TYPE="text" NAME=email SIZE=20>
+</UL>
+<INPUT TYPE="submit" VALUE="Ok"><BR>
+<INPUT TYPE="reset" VALUE="Borrar"><BR>
+</FORM>
+<HR>
+  <div id="datos">
+    hola
+  </div>
+  <div id="folders">
+  </div>
+  <i class="folder big circular icon"></i>
+  <button class="ui button" id="boton">Enviar otra vez</button>
+  <button id="botonDirectorio">Listar Directorios</button>
+  <!--<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+  <div id="divMapa" style="height:250px"></div>-->
+  <!--<script>
+    mapa = new OpenLayers.Map("divMapa");
+    mapa.addLayer(new OpenLayers.Layer.OSM());
+    mapa.zoomToMaxExtent();
+  </script>-->
+</BODY>
+</HTML>
