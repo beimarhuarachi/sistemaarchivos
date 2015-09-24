@@ -6,15 +6,6 @@ $(document).ready(function() {
     	recibirTexto();
     });
 
-    var source   = $("#entry-template").html();
-    var template = Handlebars.compile(source);
-    var context = {title: "My New Post", body: "This is my first post!"};
-    var html    = template(context);
-
-    console.log(html);
-
-    $('#datos').html(html);
-
     Handlebars.registerHelper('hola', function() {
         return this.Tipo;
     });
@@ -59,7 +50,7 @@ function listar() {
         console.log(objeto1);
 
 
-        $('#datos').html(response);
+        //$('#datos').html(response);
         
         var entrada = $('#listaDirectorios').html();
         var template2 = Handlebars.compile(entrada);
@@ -81,7 +72,7 @@ function listar() {
  
     // Code to run regardless of success or failure
     complete: function( xhr, status ) {
-        alert( "The request is complete!" );
+        //alert( "The request is complete!" );
     }
 });
 }
@@ -129,7 +120,7 @@ function recibirTexto() {
  
     // Code to run regardless of success or failure
     complete: function( xhr, status ) {
-        alert( "The request is complete!" );
+        //alert( "The request is complete!" );
     }
 });
 }
@@ -171,7 +162,7 @@ function enviar() {
  
     // Code to run regardless of success or failure
     complete: function( xhr, status ) {
-        alert( "The request is complete!" );
+        //alert( "The request is complete!" );
     }
 });
 }

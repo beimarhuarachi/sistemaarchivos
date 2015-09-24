@@ -1,80 +1,90 @@
-<!DOCTYPE>
-
-<HTML>
-<HEAD>
-<TITLE>Prueba con un FORM</TITLE>
-<link rel="stylesheet" type="text/css" href="lib/semantic-ui/semantic.min.css">
-<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
-<script type="text/javascript" src="lib/semantic-ui/semantic.min.js"></script>
-<script type="text/javascript" src="lib/handlebars/handlebarsv4.js"></script>
-<script type="text/javascript" src="js/enviar.js"></script>
-
-<script id="entry-template" type="text/x-handlebars-template">
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Administrador de Archivos</title>
+  <link rel="stylesheet" type="text/css" href="lib/semantic-ui/semantic.min.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
+  <script type="text/javascript" src="lib/semantic-ui/semantic.min.js"></script>
+  <script type="text/javascript" src="lib/handlebars/handlebarsv4.js"></script>
+  <script type="text/javascript" src="js/enviar.js"></script>
+  <script id="entry-template" type="text/x-handlebars-template">
   <div class="entry">
-    <h1>{{title}}</h1>
-    <div class="body">
-      {{body}}
-    </div>
+  <h1 class="header">{{title}}</h1>
+  <div class="body">
+  {{body}}
   </div>
-</script>
+  </div>
+  </script>
 
-<script id="listaDirectorios" type="text/x-handlebars-template">
+  <script id="listaDirectorios" type="text/x-handlebars-template">
+  <div class="ui raised inverted segment">
+
   <div class="ui list">
-{{#each Directorios}}
+  {{#each Directorios}}
   <div class="item">
-    
-    
-    {{#if Tipo}}
-      <i class="large folder icon"></i>
-    {{else}}
-      <i class="large file text outline icon"></i>
-    {{/if}}
-    <a class="content">
-      {{Nombre}}
-    </a>
+
+
+  {{#if Tipo}}
+  <i class="large folder icon"></i>
+  {{else}}
+  <i class="large file text outline icon"></i>
+  {{/if}}
+  <a class="content">
+  {{Nombre}}
+  </a>
   </div>
   {{/each}}
-</div>
-</script>
-
-
-
-</HEAD>
-<BODY>
-<H1>Ingresa los datos que corresponden para hacer la prueba;</H1>
-<BR><HR>
-<FORM class="ui form" METHOD="GET" ACTION="/cgi-bin/navegador.cgi">
-<UL>
-<LI><div class="field">Nombre: <INPUT class="ui field" TYPE="text" NAME=nombre SIZE=20></div>
-<LI>Edad: <INPUT TYPE="text" NAME=edad SIZE=2>
-<LI>Hincha de:
-<SELECT class="ui fluid dropdown" NAME="equipo">
-<OPTION SELECTED> Boca Juniors
-<OPTION> River Plate
-<OPTION> San Lorenzo
-<OPTION> Independiente
-<OPTION> Racing Club.
-<SELECT>
-<LI>Email: <INPUT TYPE="text" NAME=email SIZE=20>
-</UL>
-<INPUT TYPE="submit" VALUE="Ok"><BR>
-<INPUT TYPE="reset" VALUE="Borrar"><BR>
-</FORM>
-<HR>
-  <div id="datos">
-    hola
   </div>
-  <div id="folders">
+   </div>
+  </script>
+</head>
+<body>
+  
+  <div class="ui grid">
+
+    <div class="three wide column">
+
+    </div>
+    <div class="two wide column">
+      <div class="ui segment">
+        <div class="ui vertical labeled icon menu">
+          <a class="item">
+            <i class="trash icon"></i>
+            Borrar
+          </a>
+          <a class="item">
+            <i class="add icon"></i>
+            Crear
+          </a>
+          <a class="item">
+            <i class="unlock alternate icon"></i>
+            Cambiar permiso
+          </a>
+        </div>
+      </div>
+      
+
+    </div>
+
+    <div class="ten wide column">
+      <div class="ui inverted segment">
+        <div id="datos">
+          <h1 class="ui header inverted"> Administrador de Archivos</h1>
+        </div>
+        <div class="ui inverted divider"></div>
+        <h2 class="ui header">
+            <i class="inverted folder open icon"></i>/home
+        </h2>
+        <button class="ui inverted red button" id="boton">
+          <i class="arrow circle left icon"></i>
+          Atras
+        </button>
+        <button class="ui inverted button" id="botonDirectorio">Listar Directorios</button>
+      </div>
+
+      <div id="folders" class="ui inverted segment">
+      </div>
+    </div>
   </div>
-  <i class="folder big circular icon"></i>
-  <button class="ui button" id="boton">Enviar otra vez</button>
-  <button id="botonDirectorio">Listar Directorios</button>
-  <!--<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-  <div id="divMapa" style="height:250px"></div>-->
-  <!--<script>
-    mapa = new OpenLayers.Map("divMapa");
-    mapa.addLayer(new OpenLayers.Layer.OSM());
-    mapa.zoomToMaxExtent();
-  </script>-->
-</BODY>
-</HTML>
+</body>
+</html>
