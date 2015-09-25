@@ -1,7 +1,33 @@
 $(document).ready(function() {
+    main();
+});
+
+function obtenerRutaAnterior(ruta) {
+    var resultado = "";
+    if(ruta != '/home') {
+        var posicion = ruta.lastIndexOf('/');
+        resultado =  ruta.substring(0,posicion);
+    }
+    return resultado;
+}
+
+/**
+*   Funcion Principal
+*/
+function main() {
     $('#botonDirectorio').on('click', listar);
     $('#botonAtras').on('click', function() {
-    	enviar();
+        if(Configuracion.rutaAnterior == "") {
+            console.log('ruta anterior vacia');
+        } else {
+            var auxiliar = Configuracion.rutaAnterior;
+
+            Configuracion.cambiarRuta(Configuracion.rutaAnterior);
+            Configuracion.rutaAnterior = Helpers.obtenerRutaAnterior(auxiliar);
+            
+            Controlador.actualizarVista();
+        }     
+         //enviar();
     });
 
     Helpers.iniciarHelpers();
@@ -10,8 +36,7 @@ $(document).ready(function() {
     rutaActual = $('#rutaActual').text();
 
     Configuracion.rutaActual = rutaActual;
-    
-});
+}
 
 Helpers = {
     iniciarHelpers : function() {
@@ -27,6 +52,14 @@ Helpers = {
     },
     verificarDirectorio : function(ruta) {
         return ruta == 'directorio' ? true : false;
+    },
+    obtenerRutaAnterior : function(ruta) {
+        var resultado = "";
+        if(ruta != '/home') {
+            var posicion = ruta.lastIndexOf('/');
+            resultado =  ruta.substring(0,posicion);
+        }
+        return resultado;
     }
 }
 
@@ -97,28 +130,14 @@ function listar() {
 
 function recibirTexto() {
 	$.ajax({
- 
-    // The URL for the request
     url: "/cgi-bin/enviartexto.cgi",
- 
-    // The data to send (will be converted to a query string)
     data: {
         id: 123,
         nombre : "beimar",
         apellido : "huarachi"
     },
- 
-    // Whether this is a POST or GET request
     type: "GET",
- 
-    // The type of data we expect back
-    //dataType : "json",
- 
-    // Code to run if the request succeeds;
-    // the response is passed to the function
     success: function(response) {
-        //$( "<h1>" ).text( json.title ).appendTo( "body" );
-        //$( "<div class=\"content\">").html( json.html ).appendTo( "body" );
         console.log(response);
         
         
@@ -126,19 +145,13 @@ function recibirTexto() {
         console.log(objeto);
         $('#datos').html(response);
     },
- 
-    // Code to run if the request fails; the raw request and
-    // status codes are passed to the function
     error: function( xhr, status, errorThrown ) {
         alert( "Sorry, there was a problem!" );
         console.log( "Error: " + errorThrown );
         console.log( "Status: " + status );
         console.dir( xhr );
     },
- 
-    // Code to run regardless of success or failure
     complete: function( xhr, status ) {
-        //alert( "The request is complete!" );
     }
 });
 }
@@ -151,7 +164,7 @@ function enviar() {
  
     // The data to send (will be converted to a query string)
     data: {
-        ruta : ParseadorRutas.convertirRuta("/~home/beimar/Descargas")
+        ruta : ParseadorRutas.convertirRuta("/~home/bei mar/Descargas")
     },
  
     // Whether this is a POST or GET request
