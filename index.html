@@ -29,7 +29,7 @@
   {{else}}
   <i class="large file text outline icon"></i>
   {{/if}}
-  <a class="content">
+  <a id="{{Nombre}}" tipo="{{Tipo}}" class="content">
   {{Nombre}}
   </a>
   </div>
@@ -72,9 +72,9 @@
           <h1 class="ui header inverted"> Administrador de Archivos</h1>
         </div>
         <div class="ui inverted divider"></div>
-        <h2 class="ui header">
-            <i class="inverted folder open icon"></i>/home
-        </h2>
+        
+        <h2 id="rutaActual" class="ui header"><i class="inverted folder open icon"></i>/home</h2>
+        <div class="ui inverted divider"></div>
         <button class="ui inverted red button" id="boton">
           <i class="arrow circle left icon"></i>
           Atras

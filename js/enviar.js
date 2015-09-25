@@ -2,8 +2,8 @@ $(document).ready(function() {
     console.log( "ready!" );
     $('#botonDirectorio').on('click', listar);
     $('#boton').on('click', function() {
-    	//enviar();
-    	recibirTexto();
+    	enviar();
+    	//recibirTexto();
     });
 
     Handlebars.registerHelper('hola', function() {
@@ -15,64 +15,63 @@ $(document).ready(function() {
         }
         return options.inverse(this);
     });
+
+    $('.content').on('dblclick', function(event){
+        console.log(this.id + "hola cmo estas")
+    });
+
+    rutaActual = $('#rutaActual').text();
+
+    Configuracion.rutaActual = rutaActual;
     
 });
-console.log("sdjflkas");
+
+Controlador = {
+    actualizarVista : function() {
+        $('#rutaActual').text(Configuracion.rutaActual);
+    }
+}
+
+Configuracion = {
+    rutaActual : "",
+    actualizarRuta : function() {
+        Configuracion.rutaActual = $('#rutaActual').text();
+    },
+    cambiarRuta : function(ruta) {
+        Configuracion.rutaActual = ruta;
+    }
+}
+
+ParseadorRutas = {
+    convertirRuta : function(ruta) {
+        return ruta.replace(/\//g,"*");
+    }
+}
 
 function listar() {
     $.ajax({
- 
-    // The URL for the request
     url: "/cgi-bin/sistemaarchivos/cgi-bin/listarjson.cgi",
- 
-    // The data to send (will be converted to a query string)
     data: {
-        id: 123,
-        nombre : "Jorge",
-        apellido : "Mamani"
+        ruta : ParseadorRutas.convertirRuta(Configuracion.rutaActual)
     },
- 
-    // Whether this is a POST or GET request
-    type: "GET",
- 
-    // The type of data we expect back
-    //dataType : "json",
- 
-    // Code to run if the request succeeds;
-    // the response is passed to the function
+    type: "POST",
     success: function(response) {
-        //$( "<h1>" ).text( json.title ).appendTo( "body" );
-        //$( "<div class=\"content\">").html( json.html ).appendTo( "body" );
-        console.log(response);
-        
-        console.log(this.url);
         objeto1 = JSON.parse(response);
-        console.log(objeto1);
-
-
-        //$('#datos').html(response);
         
         var entrada = $('#listaDirectorios').html();
         var template2 = Handlebars.compile(entrada);
-        //var datos = {'Directorios' :  ['primero', 'segundo', 'tercero']}
         var resultado = template2(objeto1);
 
-        console.log(resultado);
+        console.log(response);
         $('#folders').html(resultado);
     },
- 
-    // Code to run if the request fails; the raw request and
-    // status codes are passed to the function
     error: function( xhr, status, errorThrown ) {
         alert( "Sorry, there was a problem!" );
         console.log( "Error: " + errorThrown );
         console.log( "Status: " + status );
         console.dir( xhr );
     },
- 
-    // Code to run regardless of success or failure
     complete: function( xhr, status ) {
-        //alert( "The request is complete!" );
     }
 });
 }
@@ -129,15 +128,15 @@ function enviar() {
 	$.ajax({
  
     // The URL for the request
-    url: "/cgi-bin/navegador.cgi",
+    url: "/cgi-bin/sistemaarchivos/cgi-bin/leerform.cgi",
  
     // The data to send (will be converted to a query string)
     data: {
-        id: 123
+        ruta : ParseadorRutas.convertirRuta("/~home/#beimar/Descargas")
     },
  
     // Whether this is a POST or GET request
-    type: "GET",
+    type: "POST",
  
     // The type of data we expect back
     //dataType : "json",
