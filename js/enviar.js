@@ -19,6 +19,7 @@ function main() {
     $('#botonAtras').on('click', function() {
         if(Configuracion.rutaAnterior == "") {
             console.log('ruta anterior vacia');
+            $('.ui.modal.home').modal('show');
         } else {
             var auxiliar = Configuracion.rutaAnterior;
 
@@ -26,6 +27,7 @@ function main() {
             Configuracion.rutaAnterior = Helpers.obtenerRutaAnterior(auxiliar);
             
             Controlador.actualizarVista();
+            listar();
         }     
          //enviar();
     });
@@ -36,6 +38,8 @@ function main() {
     rutaActual = $('#rutaActual').text();
 
     Configuracion.rutaActual = rutaActual;
+
+    listar();
 }
 
 Helpers = {
@@ -60,6 +64,12 @@ Helpers = {
             resultado =  ruta.substring(0,posicion);
         }
         return resultado;
+    },
+    esValido : function(ruta) {
+        if(ruta == '..' || ruta == '.' )
+            return false;
+        else 
+            return true;
     }
 }
 
@@ -109,10 +119,16 @@ function listar() {
 
         $( ".content" ).on( "click", function() {
             var tipo = this.getAttribute('tipo');
-            if(Helpers.verificarDirectorio(tipo)) {
+            var nombre = this.getAttribute('id');
+            console.log(nombre + "Beimar huara");
+            
+            if(Helpers.verificarDirectorio(tipo) && Helpers.esValido(nombre)) {
                 Configuracion.rutaAnterior = Configuracion.rutaActual;
                 Configuracion.cambiarRuta(Configuracion.rutaActual+'/'+this.id);
                 Controlador.actualizarVista();
+                listar();
+            } else {
+                $('.ui.modal.archivo').modal('show');
             }
             console.log(this.id + this.getAttribute('tipo'));
         });
