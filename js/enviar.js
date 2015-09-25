@@ -1,24 +1,11 @@
 $(document).ready(function() {
-    console.log( "ready!" );
     $('#botonDirectorio').on('click', listar);
-    $('#boton').on('click', function() {
+    $('#botonAtras').on('click', function() {
     	enviar();
-    	//recibirTexto();
     });
 
-    Handlebars.registerHelper('hola', function() {
-        return this.Tipo;
-    });
-    Handlebars.registerHelper('if', function(conditional, options) {
-        if(conditional == 'directorio') {
-            return options.fn(this);
-        }
-        return options.inverse(this);
-    });
+    Helpers.iniciarHelpers();
 
-    $('.content').on('dblclick', function(event){
-        console.log(this.id + "hola cmo estas")
-    });
 
     rutaActual = $('#rutaActual').text();
 
@@ -26,20 +13,42 @@ $(document).ready(function() {
     
 });
 
+Helpers = {
+    iniciarHelpers : function() {
+        Handlebars.registerHelper('hola', function() {
+            return this.Tipo;
+        });
+        Handlebars.registerHelper('if', function(conditional, options) {
+            if(conditional == 'directorio') {
+                return options.fn(this);
+            }
+            return options.inverse(this);
+        });
+    },
+    verificarDirectorio : function(ruta) {
+        return ruta == 'directorio' ? true : false;
+    }
+}
+
 Controlador = {
     actualizarVista : function() {
-        $('#rutaActual').text(Configuracion.rutaActual);
+        $('#rutaActual').html(Icono.getHtml+Configuracion.rutaActual);
     }
 }
 
 Configuracion = {
     rutaActual : "",
+    rutaAnterior : "",
     actualizarRuta : function() {
         Configuracion.rutaActual = $('#rutaActual').text();
     },
     cambiarRuta : function(ruta) {
         Configuracion.rutaActual = ruta;
     }
+}
+
+Icono = {
+    getHtml : '<i class="inverted folder open icon"></i>'
 }
 
 ParseadorRutas = {
@@ -64,6 +73,16 @@ function listar() {
 
         console.log(response);
         $('#folders').html(resultado);
+
+        $( ".content" ).on( "click", function() {
+            var tipo = this.getAttribute('tipo');
+            if(Helpers.verificarDirectorio(tipo)) {
+                Configuracion.rutaAnterior = Configuracion.rutaActual;
+                Configuracion.cambiarRuta(Configuracion.rutaActual+'/'+this.id);
+                Controlador.actualizarVista();
+            }
+            console.log(this.id + this.getAttribute('tipo'));
+        });
     },
     error: function( xhr, status, errorThrown ) {
         alert( "Sorry, there was a problem!" );
@@ -132,7 +151,7 @@ function enviar() {
  
     // The data to send (will be converted to a query string)
     data: {
-        ruta : ParseadorRutas.convertirRuta("/~home/#beimar/Descargas")
+        ruta : ParseadorRutas.convertirRuta("/~home/beimar/Descargas")
     },
  
     // Whether this is a POST or GET request
