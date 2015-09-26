@@ -7,9 +7,26 @@ $(document).ready(function() {
 */
 function main() {
     $('#botonDirectorio').on('click', listar);
+
+    $('#botonEliminarTodo').on('click', function(event) {
+        for (var i = 0; i < ColeccionDirectorios.length; i++) {
+            if(ColeccionDirectorios[i]) {
+                var ruta = Configuracion.rutaActual + "/" +ColeccionDirectorios[i].Nombre;
+                if(ColeccionDirectorios[i].Tipo == 'archivo') {
+                    eliminar(ruta);
+                } else if(ColeccionDirectorios[i].Tipo == 'directorio'){
+                    SistemaArchivos.eliminarTodo(ruta);
+                }
+                //console.log(ruta);
+            }
+        };
+        
+    });
+
     $('#botonAtras').on('click', function() {
         if(Configuracion.rutaAnterior == "") {
             console.log('ruta anterior vacia');
+            
             $('.ui.modal.home').modal('show');
         } else {
             var auxiliar = Configuracion.rutaAnterior;
@@ -31,6 +48,39 @@ function main() {
     Configuracion.rutaActual = rutaActual;
 
     listar();
+}
+
+SistemaArchivos = {
+    pathPrincipal : "/cgi-bin/sistemaarchivos/cgi-bin",
+    separadorRuta : "/"
+};
+
+ColeccionDirectorios = [];
+
+SistemaArchivos.eliminarTodo = function(ruta) {
+    $.ajax({
+    url: "/cgi-bin/sistemaarchivos/cgi-bin/eliminartodojson.cgi",
+    data: {
+        id: ParseadorRutas.convertirRuta(ruta)
+    },
+    type: "POST",
+    success: function(response) {
+        console.log(response);
+        
+        
+        objeto = JSON.parse(response);
+        console.log(objeto);
+        //$('#datos').html(response);
+    },
+    error: function( xhr, status, errorThrown ) {
+        alert( "Sorry, there was a problem!" );
+        console.log( "Error: " + errorThrown );
+        console.log( "Status: " + status );
+        console.dir( xhr );
+    },
+    complete: function( xhr, status ) {
+    }
+    });
 }
 
 Helpers = {
@@ -61,6 +111,17 @@ Helpers = {
             return false;
         else 
             return true;
+    },
+    excluirPuntos : function(Coleccion) {
+        colecionValida = [];
+        for(i=0;i < Coleccion.length; i++) {
+            if(Coleccion[i].Nombre == ".." || Coleccion[i].Nombre == ".") {
+                //console.log("contador" + i);
+            } else {
+                colecionValida[i] = Coleccion[i];
+            }
+        }
+        return colecionValida;
     }
 }
 
@@ -100,10 +161,17 @@ function listar() {
     type: "POST",
     success: function(response) {
         objeto1 = JSON.parse(response);
+
+        directoriosValidos = Helpers.excluirPuntos(objeto1.Directorios);
+        
+        objeto1.Directorios = directoriosValidos;
         
         var entrada = $('#listaDirectorios').html();
         var template2 = Handlebars.compile(entrada);
         var resultado = template2(objeto1);
+
+        ColeccionDirectorios = objeto1.Directorios;
+        //console.log(ColeccionDirectorios);
 
         //console.log(response);
         $('#folders').html(resultado);
@@ -115,6 +183,9 @@ function listar() {
             if(tipo == 'archivo') {
                 eliminar(Configuracion.rutaActual+'/'+nombre);
                 console.log("se esta enviando");
+            } else if(tipo == 'directorio'){
+                SistemaArchivos.eliminarTodo(Configuracion.rutaActual+'/'+nombre);
+                console.log('eliminando todo un directorio');
             }
             
             console.log(tipo + "--===" + nombre);
