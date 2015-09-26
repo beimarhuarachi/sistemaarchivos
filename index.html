@@ -7,42 +7,43 @@
   <script type="text/javascript" src="lib/semantic-ui/semantic.min.js"></script>
   <script type="text/javascript" src="lib/handlebars/handlebarsv4.js"></script>
   <script type="text/javascript" src="js/enviar.js"></script>
-  <script id="entry-template" type="text/x-handlebars-template">
-  <div class="entry">
-  <h1 class="header">{{title}}</h1>
-  <div class="body">
-  {{body}}
-  </div>
-  </div>
-  </script>
 
-  <script id="listaDirectorios" type="text/x-handlebars-template">
-  <div class="ui raised inverted segment">
+  <script id="listaDirectorios" type="text/x-handlebars-template"> <table class="ui celled striped selectable table">
+    <thead>
+      <tr>
+        <th>Archivo</th>
+        <th>Tipo</th>
+        <th>Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each Directorios}}
+      <tr>
 
-  <div class="ui list">
-  {{#each Directorios}}
-  <div class="item">
+        <td>
+          {{#if Tipo}}
+          <i class="large folder icon"></i>
+          {{else}}
+          <i class="large file text outline icon"></i>
+          {{/if}}
+          <a id="{{Nombre}}" tipo="{{Tipo}}" class="content link">
+            {{Nombre}}
+          </a>
+        </td>
+        <td>{{Tipo}}</td>
+        <td><i id="{{Nombre}}"  tipo="{{Tipo}}" class="close red large icon link icon iconoBorrar"></i>
+        </td>
 
-
-  {{#if Tipo}}
-  <i class="large folder icon"></i>
-  {{else}}
-  <i class="large file text outline icon"></i>
-  {{/if}}
-  <a id="{{Nombre}}" tipo="{{Tipo}}" class="content">
-  {{Nombre}}
-  </a>
-  </div>
-  {{/each}}
-  </div>
-   </div>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
   </script>
 </head>
 <body>
-  
   <div class="ui grid">
 
-    <div class="three wide column">
+    <div class="two wide column">
 
     </div>
     <div class="two wide column">
@@ -66,7 +67,7 @@
 
     </div>
 
-    <div class="ten wide column">
+    <div class="eleven wide column">
       <div class="ui inverted segment">
         <div id="datos">
           <h1 class="ui header inverted"> Administrador de Archivos</h1>
@@ -84,11 +85,10 @@
         </button>
       </div>
 
-      <div id="folders" class="ui inverted segment">
+      <div id="folders" class="ui segment">
       </div>
     </div>
   </div>
-
 
   <div class="ui small home modal">
     <i class="close icon"></i>

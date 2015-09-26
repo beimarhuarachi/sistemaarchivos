@@ -2,15 +2,6 @@ $(document).ready(function() {
     main();
 });
 
-function obtenerRutaAnterior(ruta) {
-    var resultado = "";
-    if(ruta != '/home') {
-        var posicion = ruta.lastIndexOf('/');
-        resultado =  ruta.substring(0,posicion);
-    }
-    return resultado;
-}
-
 /**
 *   Funcion Principal
 */
@@ -114,9 +105,20 @@ function listar() {
         var template2 = Handlebars.compile(entrada);
         var resultado = template2(objeto1);
 
-        console.log(response);
+        //console.log(response);
         $('#folders').html(resultado);
+        $('a').css('cursor', 'pointer');
 
+        $('.iconoBorrar').on('click', function(event) {
+            var tipo = this.getAttribute('tipo');
+            var nombre = this.getAttribute('id');
+            if(tipo == 'archivo') {
+                eliminar(Configuracion.rutaActual+'/'+nombre);
+                console.log("se esta enviando");
+            }
+            
+            console.log(tipo + "--===" + nombre);
+        });
         $( ".content" ).on( "click", function() {
             var tipo = this.getAttribute('tipo');
             var nombre = this.getAttribute('id');
@@ -143,6 +145,60 @@ function listar() {
     }
 });
 }
+
+
+function eliminar(rutaArchivo) {
+    $.ajax({
+    url: "/cgi-bin/sistemaarchivos/cgi-bin/borrararchivojson.cgi",
+    data: {
+        id: ParseadorRutas.convertirRuta(rutaArchivo)
+    },
+    type: "POST",
+    success: function(response) {
+        console.log(response);
+        
+        
+        objeto = JSON.parse(response);
+        console.log(objeto);
+        //$('#datos').html(response);
+    },
+    error: function( xhr, status, errorThrown ) {
+        alert( "Sorry, there was a problem!" );
+        console.log( "Error: " + errorThrown );
+        console.log( "Status: " + status );
+        console.dir( xhr );
+    },
+    complete: function( xhr, status ) {
+    }
+});
+}
+
+function eliminardirectorio(rutaArchivo) {
+    $.ajax({
+    url: "/cgi-bin/sistemaarchivos/cgi-bin/borrardirectoriojson.cgi",
+    data: {
+        id: ParseadorRutas.convertirRuta(rutaArchivo)
+    },
+    type: "POST",
+    success: function(response) {
+        console.log(response);
+        
+        
+        objeto = JSON.parse(response);
+        console.log(objeto);
+        //$('#datos').html(response);
+    },
+    error: function( xhr, status, errorThrown ) {
+        alert( "Sorry, there was a problem!" );
+        console.log( "Error: " + errorThrown );
+        console.log( "Status: " + status );
+        console.dir( xhr );
+    },
+    complete: function( xhr, status ) {
+    }
+});
+}
+
 
 function recibirTexto() {
 	$.ajax({
