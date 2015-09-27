@@ -23,6 +23,39 @@ function main() {
         
     });
 
+    $('#linkagregardirectorio').on('click', function() {
+        $('#modalagregardirectorio').modal('setting', {
+            closable  : false,
+            onDeny    : function(){
+            
+            $(this).modal('close');
+            },
+            onApprove : function(arg){
+                nombre = $('#nombredirectorio').val();
+                
+                ruta = Configuracion.rutaActual + "/" + nombre;
+                console.log(ruta);
+                crearDirectorio(ruta);
+         }
+        }).modal('show');
+    });
+
+    $('#linkagregararchivo').on('click', function() {
+        $('#modalagregararchivo').modal('setting', {
+            closable  : false,
+            onDeny    : function(){
+            
+                $(this).modal('close');
+            },
+            onApprove : function(arg){
+                nombre = $('#nombrearchivo').val();
+                ruta = Configuracion.rutaActual + "/" + nombre;
+                console.log(ruta);
+                crearArchivo(ruta);
+         }
+        }).modal('show');
+    });
+
     $('#botonAtras').on('click', function() {
         if(Configuracion.rutaAnterior == "") {
             console.log('ruta anterior vacia');
@@ -258,6 +291,59 @@ function eliminardirectorio(rutaArchivo) {
         objeto = JSON.parse(response);
         console.log(objeto);
         //$('#datos').html(response);
+    },
+    error: function( xhr, status, errorThrown ) {
+        alert( "Sorry, there was a problem!" );
+        console.log( "Error: " + errorThrown );
+        console.log( "Status: " + status );
+        console.dir( xhr );
+    },
+    complete: function( xhr, status ) {
+    }
+});
+}
+
+function crearArchivo(rutaArchivo) {
+    $.ajax({
+    url: "/cgi-bin/sistemaarchivos/cgi-bin/creararchivojson.cgi",
+    data: {
+        id: ParseadorRutas.convertirRuta(rutaArchivo)
+    },
+    type: "POST",
+    success: function(response) {
+        console.log(response);
+        
+        
+        objeto = JSON.parse(response);
+        console.log(objeto);
+        $('#nombrearchivo').val("");
+    },
+    error: function( xhr, status, errorThrown ) {
+        alert( "Sorry, there was a problem!" );
+        console.log( "Error: " + errorThrown );
+        console.log( "Status: " + status );
+        console.dir( xhr );
+    },
+    complete: function( xhr, status ) {
+    }
+});
+}
+
+
+function crearDirectorio(rutaArchivo) {
+    $.ajax({
+    url: "/cgi-bin/sistemaarchivos/cgi-bin/creardirectoriojson.cgi",
+    data: {
+        id: ParseadorRutas.convertirRuta(rutaArchivo)
+    },
+    type: "POST",
+    success: function(response) {
+        console.log(response);
+        
+        
+        objeto = JSON.parse(response);
+        console.log(objeto);
+        $('#nombredirectorio').val("");
     },
     error: function( xhr, status, errorThrown ) {
         alert( "Sorry, there was a problem!" );

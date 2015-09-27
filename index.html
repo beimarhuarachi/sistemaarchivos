@@ -56,7 +56,7 @@
             </i>
             Eliminar contenido directorio
           </a>
-          <a class="item">
+          <a id="linkagregardirectorio" class="item">
             <i class="huge icons">
               <i class="folder outline icon"></i>
               <i class="corner add outline icon"></i>
@@ -64,7 +64,7 @@
             Crear directorio
           </a>
           
-          <a class="item">
+          <a id="linkagregararchivo" class="item">
             <i class="huge icons">
               <i class="file text outline icon"></i>
               <i class="corner add outline icon"></i>
@@ -97,6 +97,60 @@
       </div>
     </div>
   </div>
+
+  
+  <div id="modalagregardirectorio" class="ui small modal">
+    <i class="close icon"></i>
+    <div class="header">
+      Nuevo directorio
+    </div>
+    <div class="content">
+      <form class="ui form">
+        <div class="field">
+          <label>Nombre directorio</label>
+          <input type="text" name="nombredirectorio" id="nombredirectorio" placeholder="Nombre del directorio nuevo">
+        </div>
+
+
+      </form>
+    </div>
+    <div class="actions">
+      <div class="ui button deny">
+        Cancel
+      </div>
+      <div class="ui button approve">
+        Okay
+      </div>
+    </div>
+  </div>
+
+
+
+  <div id="modalagregararchivo" class="ui small modal">
+    <i class="close icon"></i>
+    <div class="header">
+      Nuevo Archivo
+    </div>
+    <div class="content">
+      <form class="ui form">
+        <div class="field">
+          <label>Nombre Archivo</label>
+          <input type="text" name="nombredirectorio" id="nombrearchivo" placeholder="Nombre del archivo nuevo">
+        </div>
+        
+        
+      </form>
+    </div>
+    <div class="actions">
+      <div class="ui button deny">
+        Cancel
+      </div>
+      <div class="ui button approve">
+        Okay
+      </div>
+    </div>
+  </div>
+
 
   <div class="ui small home modal">
     <i class="close icon"></i>

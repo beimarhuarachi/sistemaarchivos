@@ -1,18 +1,15 @@
-/*
- * deldir.c - Delete a directory
- */
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <stdio.h>
 
 #include <string.h>
+#include <stdlib.h>
 #include <json/json.h>
 #include <dirent.h>
-#include <sys/types.h>
+#include <unistd.h>
 #define MAXLEN 1024
 
- void separar(char *cadena, char *linea, char separador)
+void separar(char *cadena, char *linea, char separador)
 {
   int x, y;
 
@@ -37,19 +34,15 @@
 
 }
 
-void main(void)
-{
-    printf("Content‐type:text/plain\n\n");
-
-/**
-  *
-  */
+void main(void) {
 	char *lenstr;
   char inputBuffer[MAXLEN];
   int contentLength;
   int i;
   char x;
   char mensaje[80];
+
+  printf("Content‐type:text/plain\n\n");
 
   lenstr = getenv("CONTENT_LENGTH");
     //lenstr = (char *)getenv("CONTENT_LENGTH");
@@ -78,10 +71,6 @@ void main(void)
   separar(mensaje, inputBuffer, '=');
   separar(mensaje, inputBuffer, '&');
 
-
-/**
-  *
-  */
   char original[90];
   
   
@@ -109,37 +98,34 @@ void main(void)
   nueva[ posicion ] = '\0';
 
 
+
 json_object *jobj = json_object_new_object();
 
-/**
-  *
-  */
-  if(rmdir(nueva)) {
-      perror("remove");
-      json_object *jboolean = json_object_new_boolean(0);
+
+
+
+
+
+
+	int status;
+
+	status = mkdir(nueva, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+	if(status == 0) {
+		//printf("%s\n", "si se creo");
+		json_object *jboolean = json_object_new_boolean(1);
       json_object_object_add(jobj,"respuesta", jboolean);
-      //exit(EXIT_FAILURE);
-  } else {
-      json_object *jboolean = json_object_new_boolean(1);
+	} else {
+		//printf("%s\n", "no se creo");
+		json_object *jboolean = json_object_new_boolean(0);
       json_object_object_add(jobj,"respuesta", jboolean);
-  }
-  //exit(EXIT_SUCCESS);
+	}
+
+	json_object *jstring = json_object_new_string(nueva);
 
 
-/**
-  *
-  */
-
-/*Creating a json object*/
-  
-
-  /*Creating a json string*/
-  json_object *jstring = json_object_new_string(nueva);
+  	json_object_object_add(jobj,"directoriocreado", jstring);
 
 
-  json_object_object_add(jobj,"directorioeliminado", jstring);
-
-
-
-  printf("%s",json_object_to_json_string(jobj));
+	printf("%s",json_object_to_json_string(jobj));
 }
