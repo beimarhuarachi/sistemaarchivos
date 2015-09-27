@@ -2,10 +2,55 @@ $(document).ready(function() {
     main();
 });
 
+ModeloVista = {
+    contenedorPlantillas : "#plantillas",
+    plantillasCargadas : false,
+    plantillas : ['template', 'template2', 'listaDirectorios', 'mensaje'],
+    identificador : '#',
+    agregacion : 'p',
+    sufijo : '.html',
+    ruta : 'view/',
+    getRuta : function(nombrePlantilla) {
+        return this.ruta + nombrePlantilla + this.sufijo; 
+    }
+}
+
+function renderizarPlantilla(nombrePlantilla, contexto) {
+    var source   = $('#' + nombrePlantilla).html();
+    var template = Handlebars.compile(source);
+    var html    = template(contexto);
+    $("#modales").html(html);
+}
+
+function cargarPlantillas() {
+    for (var i = 0; i < ModeloVista.plantillas.length; i++) {
+        
+        var nombrePlantilla = ModeloVista.plantillas[i];
+        var idPlantilla = agregarContenedor(nombrePlantilla);
+        var ruta = ModeloVista.getRuta(nombrePlantilla); 
+        
+        $(idPlantilla).load(ruta , cambiarEstadoLectura);
+    } 
+}
+
+function cambiarEstadoLectura() {
+    ModeloVista.plantillasCargadas = true;
+}
+
+function agregarContenedor(nombre) { 
+    var agregacion = ModeloVista.agregacion;
+    var htmlContenedor = '<div id="'+nombre + agregacion +'"></div>';
+    var nuevoId = ModeloVista.identificador+ nombre + agregacion;
+    $(ModeloVista.contenedorPlantillas).append(htmlContenedor);
+    return nuevoId;
+}
+
 /**
 *   Funcion Principal
 */
 function main() {
+    cargarPlantillas();
+
     $('#botonDirectorio').on('click', listar);
 
     $('#botonEliminarTodo').on('click', function(event) {
