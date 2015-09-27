@@ -1,0 +1,31 @@
+<script id="listaDirectorios" type="text/x-handlebars-template"> <table class="ui celled striped selectable table">
+    <thead>
+      <tr>
+        <th>Archivo</th>
+        <th>Tipo</th>
+        <th>Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each Directorios}}
+      <tr>
+
+        <td>
+          {{#if Tipo}}
+          <i class="large folder icon"></i>
+          {{else}}
+          <i class="large file text outline icon"></i>
+          {{/if}}
+          <a id="{{Nombre}}" tipo="{{Tipo}}" class="content link">
+            {{Nombre}}
+          </a>
+        </td>
+        <td>{{Tipo}}</td>
+        <td><i id="{{Nombre}}"  tipo="{{Tipo}}" class="close red large icon link icon iconoBorrar"></i>
+        </td>
+
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</script>
