@@ -135,6 +135,9 @@ Helpers = {
     verificarDirectorio : function(ruta) {
         return ruta == 'directorio' ? true : false;
     },
+    verificarArchivo : function(tipo) {
+        return tipo == 'archivo' ? true : false;
+    },
     obtenerRutaAnterior : function(ruta) {
         var resultado = "";
         if(ruta != '/home') {
@@ -174,6 +177,20 @@ Helpers = {
             contador++;
         }
         return directorios;
+    },
+    obtenerSoloArchivos : function(Coleccion) {
+        var archivos = [];
+        var contador = 0;
+        while(contador < Coleccion.length) {
+            var nombre = Coleccion[contador].Nombre;
+            var tipo = Coleccion[contador].Tipo;
+            if(this.verificarArchivo(tipo) && this.esValido(nombre)) {
+                archivos.push(Coleccion[contador]);
+            }
+
+            contador++;
+        }
+        return archivos;
     }
 }
 
@@ -262,7 +279,8 @@ function listar() {
         objeto1 = JSON.parse(response);
 
         directoriosValidos = Helpers.excluirPuntos(objeto1.Directorios);
-        
+        Archivos = Helpers.obtenerSoloArchivos(objeto1.Directorios);
+
         objeto1.Directorios = directoriosValidos;
         
         var entrada = $('#listaDirectorios').html();
