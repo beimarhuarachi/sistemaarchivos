@@ -1,0 +1,5 @@
+/**
+*  Coleccion de Directorios 
+*/
+
+Directorios = [];

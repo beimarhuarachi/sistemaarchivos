@@ -1,0 +1,26 @@
+<script id="listasolodirectorios" type="text/x-handlebars-template"> <table class="ui celled striped selectable table">
+    <thead>
+      <tr>
+        <th>Lista de Directorios</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each Directorios}}
+      <tr>
+
+        <td>
+          {{#if Tipo}}
+          <i class="large folder icon"></i>
+          {{else}}
+          <i class="large file text outline icon"></i>
+          {{/if}}
+          <a id="{{Nombre}}" tipo="{{Tipo}}" class="enlacecontenido">
+            {{Nombre}}
+          </a>
+        </td>
+
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</script>

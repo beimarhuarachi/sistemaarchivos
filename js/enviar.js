@@ -27,7 +27,7 @@ function main() {
         $('#modalagregardirectorio').modal('setting', {
             closable  : false,
             onDeny    : function(){
-            
+            $('#nombredirectorio').val("");
             $(this).modal('close');
             },
             onApprove : function(arg){
@@ -44,7 +44,7 @@ function main() {
         $('#modalagregararchivo').modal('setting', {
             closable  : false,
             onDeny    : function(){
-            
+                $('#nombrearchivo').val("");
                 $(this).modal('close');
             },
             onApprove : function(arg){
@@ -60,7 +60,7 @@ function main() {
         if(Configuracion.rutaAnterior == "") {
             console.log('ruta anterior vacia');
             
-            $('.ui.modal.home').modal('show');
+            $('#modalNoAtras').modal('show');
         } else {
             var auxiliar = Configuracion.rutaAnterior;
 
@@ -70,7 +70,6 @@ function main() {
             Controlador.actualizarVista();
             listar();
         }     
-         //enviar();
     });
 
     Helpers.iniciarHelpers();
@@ -81,7 +80,12 @@ function main() {
     Configuracion.rutaActual = rutaActual;
 
     listar();
+
+    //Carga de plantillas
+    ControladorPlantillas.cargarPlantillas();
 }
+
+
 
 SistemaArchivos = {
     pathPrincipal : "/cgi-bin/sistemaarchivos/cgi-bin",
@@ -146,15 +150,30 @@ Helpers = {
             return true;
     },
     excluirPuntos : function(Coleccion) {
-        colecionValida = [];
+        var colecionValida = [];
         for(i=0;i < Coleccion.length; i++) {
             if(Coleccion[i].Nombre == ".." || Coleccion[i].Nombre == ".") {
                 //console.log("contador" + i);
             } else {
-                colecionValida[i] = Coleccion[i];
+                //colecionValida[i] = Coleccion[i];
+                colecionValida.push(Coleccion[i]);
             }
         }
         return colecionValida;
+    },
+    obtenerSoloDirectorios : function(Coleccion) {
+        var directorios = [];
+        var contador = 0;
+        while(contador < Coleccion.length) {
+            var nombre = Coleccion[contador].Nombre;
+            var tipo = Coleccion[contador].Tipo;
+            if(this.verificarDirectorio(tipo) && this.esValido(nombre)) {
+                directorios.push(Coleccion[contador]);
+            }
+
+            contador++;
+        }
+        return directorios;
     }
 }
 
@@ -185,6 +204,42 @@ ParseadorRutas = {
     }
 }
 
+function agregarEventosVerContenido () {
+    $( ".enlacecontenido" ).on( "click", function() {
+        var tipo = this.getAttribute('tipo');
+        var nombre = this.getAttribute('id');
+
+        ControladorRuta.irAdelante(nombre);
+        ControladorRuta.actualizarVista('#rutaVista');
+
+        listarSoloDirectorios(ControladorRuta.rutaActual);
+    });
+    
+}
+
+function agregarEventoAtrasSegundo(rutaorigen) {
+    $( "#botonAtrasSe" ).on( "click", function() {
+        if(ControladorRuta.rutaAnterior == "") {
+            console.log('ruta anterior vacia');
+            
+            $('#modalNoAtras').modal('show');
+        } else {
+            console.log("fsdafasd");
+            ControladorRuta.irAtras();
+            ControladorRuta.actualizarVista('#rutaVista');
+
+            listarSoloDirectorios(ControladorRuta.rutaActual);
+        }
+    });
+    $( "#botonAceptarCopiar" ).on( "click", function() {
+        var origen = Configuracion.rutaActual + "/" + Copia.rutaorigen;
+        var destino = ControladorRuta.rutaActual + "/" + Copia.rutaorigen;
+        copiarArchivo(origen, destino);
+        $('#modalsegundoexplorador').modal('hide');
+    });
+    Copia.rutaorigen = rutaorigen;
+}
+
 function listar() {
     $.ajax({
     url: "/cgi-bin/sistemaarchivos/cgi-bin/listarjson.cgi",
@@ -210,7 +265,7 @@ function listar() {
         $('#folders').html(resultado);
         $('a').css('cursor', 'pointer');
 
-        $('.iconoBorrar').on('click', function(event) {
+        $('.botoneliminaruno').on('click', function(event) {
             var tipo = this.getAttribute('tipo');
             var nombre = this.getAttribute('id');
             if(tipo == 'archivo') {
@@ -223,7 +278,40 @@ function listar() {
             
             console.log(tipo + "--===" + nombre);
         });
-        $( ".content" ).on( "click", function() {
+
+        $('.botoncopiaruno').on('click', function(event) {
+            var tipo = this.getAttribute('tipo');
+            var nombre = this.getAttribute('id');
+            if(tipo == 'archivo') {
+                var objetoRespuesta = {Directorios: []};
+
+                Directorios = Helpers.obtenerSoloDirectorios(ColeccionDirectorios);
+
+                objetoRespuesta.Directorios = Directorios;
+
+                ControladorPlantillas.renderizarPlantilla("#listasolodirectorios", "#solodirectorios", objetoRespuesta);
+
+                $('a').css('cursor', 'pointer');
+
+                ControladorRuta.cambiarRutaEntera(Configuracion.rutaActual);
+                ControladorRuta.actualizarVista('#rutaVista');
+
+                agregarEventosVerContenido();
+
+                if(!ManejadorEventos.atrasSE) {
+                    agregarEventoAtrasSegundo(nombre);
+                    ManejadorEventos.atrasSE = true;
+                }
+                
+
+                $('#modalsegundoexplorador').modal('show');
+
+            } else if(tipo == 'directorio'){
+                
+            }
+        });
+
+        $( ".content.link" ).on( "click", function() {
             var tipo = this.getAttribute('tipo');
             var nombre = this.getAttribute('id');
             console.log(nombre + "Beimar huara");
@@ -234,7 +322,7 @@ function listar() {
                 Controlador.actualizarVista();
                 listar();
             } else {
-                $('.ui.modal.archivo').modal('show');
+                $('#modalArchivo').modal('show');
             }
             console.log(this.id + this.getAttribute('tipo'));
         });
@@ -329,6 +417,69 @@ function crearArchivo(rutaArchivo) {
 });
 }
 
+
+function listarSoloDirectorios(rutaArchivo) {
+    $.ajax({
+    url: DatosConfiguracion.urlScripts + 'listarjson.cgi',
+    data: {
+        id: ParseadorRutas.convertirRuta(rutaArchivo)
+    },
+    type: "POST",
+    success: function(response) {
+        var objetoRespuesta = JSON.parse(response);
+
+        Directorios = Helpers.obtenerSoloDirectorios(objetoRespuesta.Directorios);
+
+        objetoRespuesta.Directorios = Directorios;
+
+        ControladorPlantillas.renderizarPlantilla("#listasolodirectorios", "#solodirectorios", objetoRespuesta);
+
+        $('a').css('cursor', 'pointer');
+
+        agregarEventosVerContenido();
+
+        //ControladorRuta.cambiarRutaEntera(Configuracion.rutaActual);
+        //ControladorRuta.actualizarVista('#rutaVista');
+
+        console.log(objetoRespuesta);
+    },
+    error: function( xhr, status, errorThrown ) {
+        alert( "Sorry, there was a problem!" );
+        console.log( "Error: " + errorThrown );
+        console.log( "Status: " + status );
+        console.dir( xhr );
+    },
+    complete: function( xhr, status ) {
+    }
+});
+}
+
+
+function copiarArchivo(rutaorigen, rutadestino) {
+    $.ajax({
+    url: DatosConfiguracion.urlScripts + 'copiarjson.cgi',
+    data: {
+        primero: ParseadorRutas.convertirRuta(rutaorigen),
+        segundo : ParseadorRutas.convertirRuta(rutadestino)
+    },
+    type: "POST",
+    success: function(response) {
+        console.log(response);
+        
+        
+        objeto = JSON.parse(response);
+        console.log(objeto);
+    },
+    error: function( xhr, status, errorThrown ) {
+        alert( "Sorry, there was a problem!" );
+        console.log( "Error: " + errorThrown );
+        console.log( "Status: " + status );
+        console.dir( xhr );
+    },
+    complete: function( xhr, status ) {
+    }
+});
+}
 
 function crearDirectorio(rutaArchivo) {
     $.ajax({

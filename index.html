@@ -6,6 +6,12 @@
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
   <script type="text/javascript" src="lib/semantic-ui/semantic.min.js"></script>
   <script type="text/javascript" src="lib/handlebars/handlebarsv4.js"></script>
+  <script type="text/javascript" src="js/datosconfiguracion.js"></script>
+  <script type="text/javascript" src="js/directorios.js"></script>
+  <script type="text/javascript" src="js/archivos.js"></script>
+  <script type="text/javascript" src="js/manejadoreventos.js"></script>
+  <script type="text/javascript" src="js/administradorplantillas.js"></script>
+  <script type="text/javascript" src="js/explorador.js"></script>
   <script type="text/javascript" src="js/enviar.js"></script>
 
   <script id="listaDirectorios" type="text/x-handlebars-template"> <table class="ui celled striped selectable table">
@@ -13,7 +19,7 @@
       <tr>
         <th>Archivo</th>
         <th>Tipo</th>
-        <th>Eliminar</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -31,9 +37,16 @@
           </a>
         </td>
         <td>{{Tipo}}</td>
-        <td><i id="{{Nombre}}"  tipo="{{Tipo}}" class="close red large icon link icon iconoBorrar"></i>
-        </td>
+        <td>
+          <div class="ui tiny basic buttons">
+          <button id={{Nombre}} tipo={{Tipo}} class="ui  button botoneliminaruno">Eliminar</button>
+          <button id={{Nombre}} tipo={{Tipo}} class="ui  button botoncopiaruno">Copiar</button>
+          <button id={{Nombre}} tipo={{Tipo}} class="ui  button botonmoveruno">Mover</button>
+          <button id={{Nombre}} tipo={{Tipo}} class="ui  button botoncambiaruno">CambiarPermiso</button>
+          
+          </div>
 
+        </td>
       </tr>
       {{/each}}
     </tbody>
@@ -110,8 +123,6 @@
           <label>Nombre directorio</label>
           <input type="text" name="nombredirectorio" id="nombredirectorio" placeholder="Nombre del directorio nuevo">
         </div>
-
-
       </form>
     </div>
     <div class="actions">
@@ -137,8 +148,6 @@
           <label>Nombre Archivo</label>
           <input type="text" name="nombredirectorio" id="nombrearchivo" placeholder="Nombre del archivo nuevo">
         </div>
-        
-        
       </form>
     </div>
     <div class="actions">
@@ -152,7 +161,7 @@
   </div>
 
 
-  <div class="ui small home modal">
+  <div id="modalNoAtras" class="ui small home modal">
     <i class="close icon"></i>
     <div class="header">
       Mensaje
@@ -165,11 +174,9 @@
         No puede Ir mas atras del directorio "/home"
       </div>
     </div>
-    
   </div>
 
-
-  <div class="ui small archivo modal">
+  <div id="modalArchivo" class="ui small archivo modal">
     <i class="close icon"></i>
     <div class="header">
       Mensaje
@@ -182,7 +189,20 @@
         Seleccionaste un archivo, debe seleccionar un directorio
       </div>
     </div>
-    
   </div>
+
+
+  <div id="modalsegundoexplorador" class="ui small home modal">
+    <i class="close icon"></i>
+    <div class="header">
+      Seleccione un Destino
+    </div>
+    <div id="segundoexplorador" class="content">
+      
+    </div>
+  </div>
+
+  <div id="plantillas"></div>
+
 </body>
 </html>
