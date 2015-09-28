@@ -217,7 +217,7 @@ function agregarEventosVerContenido () {
     
 }
 
-function agregarEventoAtrasSegundo(rutaorigen) {
+function agregarEventoAtrasSegundo() {
     $( "#botonAtrasSe" ).on( "click", function() {
         if(ControladorRuta.rutaAnterior == "") {
             console.log('ruta anterior vacia');
@@ -237,7 +237,10 @@ function agregarEventoAtrasSegundo(rutaorigen) {
         copiarArchivo(origen, destino);
         $('#modalsegundoexplorador').modal('hide');
     });
-    Copia.rutaorigen = rutaorigen;
+    $( "#botonCancelarSE" ).on( "click", function() {
+        $('#modalsegundoexplorador').modal('hide');
+    });
+    
 }
 
 function listar() {
@@ -302,7 +305,7 @@ function listar() {
                     agregarEventoAtrasSegundo(nombre);
                     ManejadorEventos.atrasSE = true;
                 }
-                
+                Copia.rutaorigen = nombre;
 
                 $('#modalsegundoexplorador').modal('show');
 
