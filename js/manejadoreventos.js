@@ -1,5 +1,11 @@
 ManejadorEventos = {
-	atrasSE : false
+	atrasSE : false,
+	moviendo : false,
+	copiando : false,
+	volverEstadoInicial : function() {
+		this.moviendo = false;
+		this.copiando = false;
+	}
 }
 
 Copia = {
