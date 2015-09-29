@@ -23,6 +23,70 @@ function main() {
         
     });
 
+    $('#linkmoverarchivos').on('click', function() {
+
+        if(Archivos.length != 0) {
+            //posible refactorizacion
+            ManejadorEventos.moviendoTodo = true;
+            var objetoRespuesta = {Directorios: []};
+
+            Directorios = Helpers.obtenerSoloDirectorios(ColeccionDirectorios);
+
+            objetoRespuesta.Directorios = Directorios;
+
+            ControladorPlantillas.renderizarPlantilla("#listasolodirectorios", "#solodirectorios", objetoRespuesta);
+
+            $('a').css('cursor', 'pointer');
+
+            ControladorRuta.cambiarRutaEntera(Configuracion.rutaActual);
+            ControladorRuta.actualizarVista('#rutaVista');
+
+            agregarEventosVerContenido();
+
+            if(!ManejadorEventos.atrasSE) {
+                agregarEventoAtrasSegundo();
+                ManejadorEventos.atrasSE = true;
+            }
+            //Copia.rutaorigen = nombre;
+
+            $('#modalsegundoexplorador').modal('show');
+        } else {
+            console.log('no hay archivos para copiar');
+        }   
+    });
+
+    $('#linkcopiararchivos').on('click', function() {
+
+        if(Archivos.length != 0) {
+            //posible refactorizacion
+            ManejadorEventos.copiandoTodo = true;
+            var objetoRespuesta = {Directorios: []};
+
+            Directorios = Helpers.obtenerSoloDirectorios(ColeccionDirectorios);
+
+            objetoRespuesta.Directorios = Directorios;
+
+            ControladorPlantillas.renderizarPlantilla("#listasolodirectorios", "#solodirectorios", objetoRespuesta);
+
+            $('a').css('cursor', 'pointer');
+
+            ControladorRuta.cambiarRutaEntera(Configuracion.rutaActual);
+            ControladorRuta.actualizarVista('#rutaVista');
+
+            agregarEventosVerContenido();
+
+            if(!ManejadorEventos.atrasSE) {
+                agregarEventoAtrasSegundo();
+                ManejadorEventos.atrasSE = true;
+            }
+            //Copia.rutaorigen = nombre;
+
+            $('#modalsegundoexplorador').modal('show');
+        } else {
+            console.log('no hay archivos para copiar');
+        }   
+    });
+
     $('#linkagregardirectorio').on('click', function() {
         $('#modalagregardirectorio').modal('setting', {
             closable  : false,
@@ -257,6 +321,12 @@ function agregarEventoAtrasSegundo() {
             ManejadorEventos.volverEstadoInicial();
         } else if(ManejadorEventos.moviendo) {
             moverArchivo(origen, destino);
+            ManejadorEventos.volverEstadoInicial();
+        } else if(ManejadorEventos.copiandoTodo) {
+            operacionTodosArchivos(Archivos, Configuracion.rutaActual ,ControladorRuta.rutaActual, "copiarArchivo");
+            ManejadorEventos.volverEstadoInicial();
+        } else if(ManejadorEventos.moviendoTodo) {
+            operacionTodosArchivos(Archivos, Configuracion.rutaActual ,ControladorRuta.rutaActual, "moverArchivo");
             ManejadorEventos.volverEstadoInicial();
         }
                
