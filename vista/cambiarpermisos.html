@@ -1,0 +1,62 @@
+<script id="cambiarpermisos" type="text/x-handlebars-template"> 
+  <div class="ui card fluid">
+  <div class="content">
+    {{#if tipo}}
+    <i class="right floated big folder outline icon"></i>
+    {{else}}
+    <i class="right floated large file text outline icon"></i>
+    {{/if}}
+    <div class="header">
+      {{nombre}}
+    </div>
+    <div class="meta">
+      {{tipo}}
+    </div>
+    <div class="description">
+      este es un archivo con permisos <b>xwrfds</b>
+      <div class="ui segment">
+        <div class="grouped fields">
+          <label>Permisos Nuevos</label>
+          <div class="ui divider"></div>
+          <div class="field">
+            <div class="ui toggle checkbox">
+              <input id="checktodo" type="radio" name="throughput" checked="checked">
+              <label>Otorgar todos los permisos</label>
+            </div>
+          </div>
+          <div class="ui divider"></div>
+          <div class="field">
+            <div class="ui toggle checkbox">
+              <input id="checklecturaescritura" type="radio" name="throughput">
+              <label>Otorgar permisos de lectura y escritura</label>
+            </div>
+          </div>
+          <div class="ui divider"></div>
+          <div class="field">
+            <div  class="ui toggle checkbox">
+              <input id="checklectura" type="radio" name="throughput">
+              <label>Otorgar permisos de lectura</label>
+            </div>
+          </div>
+          <div class="ui divider"></div>
+          <div class="field">
+            <div class="ui toggle checkbox checked">
+              <input id="checknada" type="radio" name="throughput">
+              <label>Quitar todos los permisos</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="extra content actions">
+    <div class="ui two buttons">
+      <div class="ui green basic button ok">Guardar Cambios</div>
+      <div class="ui red basic button cancel">Cancelar</div>
+    </div>
+  </div>
+</div>
+</script>
+

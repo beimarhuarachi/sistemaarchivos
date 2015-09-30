@@ -15,5 +15,9 @@ DatosConfiguracion = {
 	{
 		nombreServicio : "moverArchivo",
 		archivoServicio : "moverarchivojson.cgi"
+	},
+	{
+		nombreServicio : "cambiarPermiso",
+		archivoServicio : "cambiarpermisojson.cgi"
 	}]
 }

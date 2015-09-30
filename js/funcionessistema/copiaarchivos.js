@@ -15,9 +15,20 @@ function operacionTodosArchivos(archivos, origen, destino, operacion) {
 	}
 }
 
-function  moverTodosArchivos(argument) {
- 	
- } 
+function operacionCambiarPermiso(nombreArchivo, tipoCambio,rutaorigen) {
+	var rutaServicio = obtenerRutaServicio("cambiarPermiso");
+	var rutaArchivo = rutaorigen + "/" + nombreArchivo;
+
+	datos = {
+		direccionArchivo : ParseadorRutas.convertirRuta(rutaArchivo),
+		tipoCambio : tipoCambio
+	}
+
+	console.log(rutaServicio + "\n" + datos.direccionArchivo);
+
+	peticionServidor(rutaServicio, datos, "POST", callbackCopiarArchivos);
+}
+
 
 function callbackCopiarArchivos (response) {
 	console.log(response);
@@ -56,3 +67,32 @@ function peticionServidor(rutaservicio, datos, tipoPeticion, callback) {
     	}
 	});
 }
+
+function recorrerArbol(json){
+	var type;
+	var resultado;
+	for (var i=0; i < json.length; i++){
+		type = typeof json[i].hijos;
+
+		if (type=="undefined") {
+			resultado = true;					
+			//alert(json[i].id);
+			console.log(json[i].id);
+		} else {
+			//alert(json[i].id);
+			resultado = recorrerArbol(json[i].hijos);
+		}
+	}
+	return resultado;
+}
+
+arbol =  [{"id":1, "code":1,"hijos":  [
+{"id":11,"code":11},
+{"id":12,"code":12}] 
+},
+{"id":2, "code":2, "hijos":
+[{"id":21,"code":21},
+{"id":22,"code":22, "hijos": [
+{"id":221,"code":221},
+{"id":222,"code":222} ]	}
+] } ];

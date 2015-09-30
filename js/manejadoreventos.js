@@ -12,6 +12,11 @@ ManejadorEventos = {
 	}
 }
 
+ControladorPermisos = {
+	archivoSeleccionado : "",
+	tipo : 0
+}
+
 Copia = {
 	rutaorigen : "",
 	rutadestino : "",

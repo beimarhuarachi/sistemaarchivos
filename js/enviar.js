@@ -378,6 +378,48 @@ function listar() {
             console.log(tipo + "--===" + nombre);
         });
 
+        $('.botoncambiaruno').on('click', function(event) {
+            var tipo = this.getAttribute('tipo');
+            var nombre = this.getAttribute('id');
+            
+            ControladorPermisos.archivoSeleccionado = nombre;
+            ControladorPermisos.tipo = 1;
+            
+            var archivo = {tipo : tipo, nombre : nombre};
+
+            ControladorPlantillas.renderizarPlantilla("#cambiarpermisos", "#contenedorcambiarpermisos", archivo);
+            console.log(tipo + "--===" + nombre);
+            $('.ui.checkbox').checkbox({
+                onChange : function () {
+                    console.log(this.checked + this.id);
+                    if(this.id == "checktodo" && this.checked) {
+                        ControladorPermisos.tipo = 1;
+                    } else if(this.id == "checklecturaescritura" && this.checked) {
+                        ControladorPermisos.tipo = 2;
+                    } else if(this.id == "checklectura" && this.checked) {
+                        ControladorPermisos.tipo = 3;
+                    } else if(this.id == "checknada" && this.checked) {
+                        ControladorPermisos.tipo = 4;
+                    }
+                }
+            });
+
+            $('#modalcambiarpermisos')
+            .modal({
+                closable  : false,
+                onDeny    : function(){
+                  $(this).modal('hide');
+                  return false;
+                },
+                onApprove : function() {
+                    var nombrearchivo = ControladorPermisos.archivoSeleccionado;
+                    var tipo = ControladorPermisos.tipo;
+                    var rutaorigen = Configuracion.rutaActual;
+                    operacionCambiarPermiso(nombrearchivo, tipo,rutaorigen);
+                }
+            }).modal('show');
+        });
+
         $('.botoncopiaruno').on('click', function(event) {
             var tipo = this.getAttribute('tipo');
             var nombre = this.getAttribute('id');

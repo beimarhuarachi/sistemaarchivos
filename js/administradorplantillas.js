@@ -12,6 +12,7 @@ ControladorPlantillas = {
     cargarPlantillas : function() {
         cargarSegundoExplorador();
         cargarListaSoloDirectorios();
+        cargarcambiarpermisos();
     },
     renderizarPlantilla : function(idTemplate, idContenedor, contexto) {
         var entrada = $(idTemplate).html();
@@ -20,6 +21,15 @@ ControladorPlantillas = {
 
         $(idContenedor).html(resultadoHtml);
     }
+}
+
+function cargarcambiarpermisos() {
+    $.ajax({  
+        url: DatosConfiguracion.urlPlantillas + 'cambiarpermisos.html',  
+        success: function(data) {  
+            $(ControladorPlantillas.idContenedorPlantillas).append(data);  
+        }  
+    });
 }
 
 function cargarSegundoExplorador() {
